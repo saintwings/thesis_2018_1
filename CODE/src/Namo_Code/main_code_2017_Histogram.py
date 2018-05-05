@@ -225,47 +225,47 @@ if __name__ == "__main__":
     # np.save("bye_quaternion_score_array_reduce",bye_quaternion_score_array_reduce)
 
 
-    # ##### salute posture #####
-    # ### collect salute catesian position and quaternion ###
-    salute_elbow_position = np.asarray(collect_cartesian_position_data(salute_kinematics_set, 3))  ### 3 = elbow position
-    salute_wrist_position = np.asarray(collect_cartesian_position_data(salute_kinematics_set, 4))  ### 4 = wrist position
+    # # ##### salute posture #####
+    # # ### collect salute catesian position and quaternion ###
+    # salute_elbow_position = np.asarray(collect_cartesian_position_data(salute_kinematics_set, 3))  ### 3 = elbow position
+    # salute_wrist_position = np.asarray(collect_cartesian_position_data(salute_kinematics_set, 4))  ### 4 = wrist position
 
-    salute_quaternion = np.asarray(collect_quaternion_data(salute_kinematics_set))
-    salute_quaternion_upScale = np.copy(upScale_quaternion_value(salute_quaternion, 100))
+    # salute_quaternion = np.asarray(collect_quaternion_data(salute_kinematics_set))
+    # salute_quaternion_upScale = np.copy(upScale_quaternion_value(salute_quaternion, 100))
 
-    salute_elbow_score_array, salute_elbow_index_offset = build_score_array_and_offset_3D(salute_elbow_position, 42, base_score_3dim)
-    salute_wrist_score_array, salute_wrist_index_offset = build_score_array_and_offset_3D(salute_wrist_position, 42, base_score_3dim)
-    salute_quaternion_score_array, salute_quatenion_index_offset = build_score_array_and_offset_4D(salute_quaternion_upScale, 42, base_score_4dim)
+    # salute_elbow_score_array, salute_elbow_index_offset = build_score_array_and_offset_3D(salute_elbow_position, 42, base_score_3dim)
+    # salute_wrist_score_array, salute_wrist_index_offset = build_score_array_and_offset_3D(salute_wrist_position, 42, base_score_3dim)
+    # salute_quaternion_score_array, salute_quatenion_index_offset = build_score_array_and_offset_4D(salute_quaternion_upScale, 42, base_score_4dim)
 
-    salute_elbow_score_array_reduce = reduce_score_data(salute_elbow_score_array)
-    np.save("salute_elbow_score_array_reduce",salute_elbow_score_array_reduce)
+    # salute_elbow_score_array_reduce = reduce_score_data(salute_elbow_score_array)
+    # np.save("salute_elbow_score_array_reduce",salute_elbow_score_array_reduce)
 
-    salute_wrist_score_array_reduce = reduce_score_data(salute_wrist_score_array)
-    np.save("salute_wrist_score_array_reduce",salute_wrist_score_array_reduce)
+    # salute_wrist_score_array_reduce = reduce_score_data(salute_wrist_score_array)
+    # np.save("salute_wrist_score_array_reduce",salute_wrist_score_array_reduce)
 
-    salute_quaternion_score_array_reduce = reduce_score_data(salute_quaternion_score_array)
-    np.save("salute_quaternion_score_array_reduce",salute_quaternion_score_array_reduce)
+    # salute_quaternion_score_array_reduce = reduce_score_data(salute_quaternion_score_array)
+    # np.save("salute_quaternion_score_array_reduce",salute_quaternion_score_array_reduce)
 
-    # ##### sinvite posture #####
-    # ### collect sinvite catesian position and quaternion ###
-    sinvite_elbow_position = np.asarray(collect_cartesian_position_data(sinvite_kinematics_set, 3))  ### 3 = elbow position
-    sinvite_wrist_position = np.asarray(collect_cartesian_position_data(sinvite_kinematics_set, 4))  ### 4 = wrist position
+    # # ##### sinvite posture #####
+    # # ### collect sinvite catesian position and quaternion ###
+    # sinvite_elbow_position = np.asarray(collect_cartesian_position_data(sinvite_kinematics_set, 3))  ### 3 = elbow position
+    # sinvite_wrist_position = np.asarray(collect_cartesian_position_data(sinvite_kinematics_set, 4))  ### 4 = wrist position
 
-    sinvite_quaternion = np.asarray(collect_quaternion_data(sinvite_kinematics_set))
-    sinvite_quaternion_upScale = np.copy(upScale_quaternion_value(sinvite_quaternion, 100)) 
+    # sinvite_quaternion = np.asarray(collect_quaternion_data(sinvite_kinematics_set))
+    # sinvite_quaternion_upScale = np.copy(upScale_quaternion_value(sinvite_quaternion, 100)) 
 
-    sinvite_elbow_score_array, sinvite_elbow_index_offset = build_score_array_and_offset_3D(sinvite_elbow_position, 42, base_score_3dim)
-    sinvite_wrist_score_array, sinvite_wrist_index_offset = build_score_array_and_offset_3D(sinvite_wrist_position, 42, base_score_3dim)
-    sinvite_quaternion_score_array, sinvite_quatenion_index_offset = build_score_array_and_offset_4D(sinvite_quaternion_upScale, 42, base_score_4dim)
+    # sinvite_elbow_score_array, sinvite_elbow_index_offset = build_score_array_and_offset_3D(sinvite_elbow_position, 42, base_score_3dim)
+    # sinvite_wrist_score_array, sinvite_wrist_index_offset = build_score_array_and_offset_3D(sinvite_wrist_position, 42, base_score_3dim)
+    # sinvite_quaternion_score_array, sinvite_quatenion_index_offset = build_score_array_and_offset_4D(sinvite_quaternion_upScale, 42, base_score_4dim)
 
-    sinvite_elbow_score_array_reduce = reduce_score_data(sinvite_elbow_score_array)
-    np.save("sinvite_elbow_score_array_reduce",sinvite_elbow_score_array_reduce)
+    # sinvite_elbow_score_array_reduce = reduce_score_data(sinvite_elbow_score_array)
+    # np.save("sinvite_elbow_score_array_reduce",sinvite_elbow_score_array_reduce)
 
-    sinvite_wrist_score_array_reduce = reduce_score_data(sinvite_wrist_score_array)
-    np.save("sinvite_wrist_score_array_reduce",sinvite_wrist_score_array_reduce)
+    # sinvite_wrist_score_array_reduce = reduce_score_data(sinvite_wrist_score_array)
+    # np.save("sinvite_wrist_score_array_reduce",sinvite_wrist_score_array_reduce)
 
-    sinvite_quaternion_score_array_reduce = reduce_score_data(sinvite_quaternion_score_array)
-    np.save("sinvite_quaternion_score_array_reduce",sinvite_quaternion_score_array_reduce)
+    # sinvite_quaternion_score_array_reduce = reduce_score_data(sinvite_quaternion_score_array)
+    # np.save("sinvite_quaternion_score_array_reduce",sinvite_quaternion_score_array_reduce)
 
     # ##### wai posture #####
     # ### collect wai catesian position and quaternion ###
