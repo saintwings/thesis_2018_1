@@ -166,9 +166,9 @@ def reduce_score_data(score):
 ##################################################################################################
 if __name__ == "__main__":
 
-    base_score_3dim = create_3dim_normalize_score_array(20) ### @param(sphere_radius)
+    #base_score_3dim = create_3dim_normalize_score_array(20) ### @param(sphere_radius)
 
-    base_score_4dim = create_4dim_normalize_score_array(5)
+    #base_score_4dim = create_4dim_normalize_score_array(5)
 
     print(scriptpath)
     ############# Start prepair data #############
@@ -196,12 +196,14 @@ if __name__ == "__main__":
     ### type :: 'std' = standard_deviation, 'equl' = all weight equal
     avg_joint_angle_std = find_avg_joint_angle(all_posture_stat_list, 'std')
     avg_joint_angle_equl = find_avg_joint_angle(all_posture_stat_list, 'equl')
+    print(avg_joint_angle_std)
+    print(avg_joint_angle_equl)
 
-    ### calculate kinematics ###
-    bye_kinematics_set = collect_kinematics_data(right_side_bye_set)
-    salute_kinematics_set = collect_kinematics_data(right_side_salute_set)
-    sinvite_kinematics_set = collect_kinematics_data(right_side_sinvite_set)
-    wai_kinematics_set = collect_kinematics_data(right_side_wai_set)
+    # ### calculate kinematics ###
+    # bye_kinematics_set = collect_kinematics_data(right_side_bye_set)
+    # salute_kinematics_set = collect_kinematics_data(right_side_salute_set)
+    # sinvite_kinematics_set = collect_kinematics_data(right_side_sinvite_set)
+    # wai_kinematics_set = collect_kinematics_data(right_side_wai_set)
 
     # # ##### bye posture #####
     # # ### collect bye catesian position and quaternion ###
@@ -269,24 +271,25 @@ if __name__ == "__main__":
 
     # ##### wai posture #####
     # ### collect wai catesian position and quaternion ###
-    wai_elbow_position = np.asarray(collect_cartesian_position_data(wai_kinematics_set, 3))  ### 3 = elbow position
-    wai_wrist_position = np.asarray(collect_cartesian_position_data(wai_kinematics_set, 4))  ### 4 = wrist position
+    # wai_elbow_position = np.asarray(collect_cartesian_position_data(wai_kinematics_set, 3))  ### 3 = elbow position
+    # wai_wrist_position = np.asarray(collect_cartesian_position_data(wai_kinematics_set, 4))  ### 4 = wrist position
 
-    wai_quaternion = np.asarray(collect_quaternion_data(wai_kinematics_set))
-    wai_quaternion_upScale = np.copy(upScale_quaternion_value(wai_quaternion, 100)) 
+    # wai_quaternion = np.asarray(collect_quaternion_data(wai_kinematics_set))
+    # wai_quaternion_upScale = np.copy(upScale_quaternion_value(wai_quaternion, 100)) 
 
-    wai_elbow_score_array, wai_elbow_index_offset = build_score_array_and_offset_3D(wai_elbow_position, 42, base_score_3dim)
-    wai_wrist_score_array, wai_wrist_index_offset = build_score_array_and_offset_3D(wai_wrist_position, 42, base_score_3dim)
-    wai_quaternion_score_array, wai_quatenion_index_offset = build_score_array_and_offset_4D(wai_quaternion_upScale, 42, base_score_4dim)
+    # wai_elbow_score_array, wai_elbow_index_offset = build_score_array_and_offset_3D(wai_elbow_position, 42, base_score_3dim)
+    # wai_wrist_score_array, wai_wrist_index_offset = build_score_array_and_offset_3D(wai_wrist_position, 42, base_score_3dim)
+    # wai_quaternion_score_array, wai_quatenion_index_offset = build_score_array_and_offset_4D(wai_quaternion_upScale, 42, base_score_4dim)
 
-    wai_elbow_score_array_reduce = reduce_score_data(wai_elbow_score_array)
-    np.save("wai_elbow_score_array_reduce",wai_elbow_score_array_reduce)
+    # wai_elbow_score_array_reduce = reduce_score_data(wai_elbow_score_array)
+    # print(type(wai_elbow_score_array_reduce))
+    # np.save("wai_elbow_score_array_reduce",wai_elbow_score_array_reduce)
 
-    wai_wrist_score_array_reduce = reduce_score_data(wai_wrist_score_array)
-    np.save("wai_wrist_score_array_reduce",wai_wrist_score_array_reduce)
+    # wai_wrist_score_array_reduce = reduce_score_data(wai_wrist_score_array)
+    # np.save("wai_wrist_score_array_reduce",wai_wrist_score_array_reduce)
 
-    wai_quaternion_score_array_reduce = reduce_score_data(wai_quaternion_score_array)
-    np.save("wai_quaternion_score_array_reduce",wai_quaternion_score_array_reduce)
+    # wai_quaternion_score_array_reduce = reduce_score_data(wai_quaternion_score_array)
+    # np.save("wai_quaternion_score_array_reduce",wai_quaternion_score_array_reduce)
 
     # wai_dataSet = np.concatenate((wai_elbow_position[0:100,:], wai_wrist_position[0:100,:], wai_quaternion[0:100, :-1]), axis=1)
     # wai_dataSet = np.insert(wai_dataSet, 10, 4, axis=1)
