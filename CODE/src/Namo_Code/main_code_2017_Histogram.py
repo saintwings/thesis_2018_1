@@ -119,7 +119,7 @@ def convert_motorValue_to_cartesianSpace(posture_dataSet):
 
     return motorDegree_set
 
-def reduce_score_data(score):
+def reduce_score_data(score, offset, scale):
 
     # print(getsizeof(bye_elbow_score_array))
     # print(bye_elbow_score_array.shape)
@@ -146,13 +146,13 @@ def reduce_score_data(score):
             for d3_i, d3_value in enumerate(d2_value):
                 if score.ndim == 3:
                     if d3_value >= lower_score:
-                        new_score_data[(d1_i,d2_i,d3_i)] = d3_value
+                        new_score_data[(d1_i + offset[0], d2_i + offset[1], d3_i + offset[2])] = d3_value
                         #print(d1_i,d2_i,d3_i,d3_value)
                     
                 elif score.ndim == 4:
                     for d4_i, d4_value in enumerate(d3_value):
                         if d4_value >= lower_score:
-                            new_score_data[(d1_i,d2_i,d3_i,d4_i)] = d4_value
+                            new_score_data[(d1_i + offset[0], d2_i + offset[1], d3_i + offset[2], d4_i + offset[3])] = d4_value
                             #print(d1_i,d2_i,d3_i,d4_i,d4_value)
     print(getsizeof(new_score_data))
     print(len(new_score_data))
@@ -166,9 +166,9 @@ def reduce_score_data(score):
 ##################################################################################################
 if __name__ == "__main__":
 
-    #base_score_3dim = create_3dim_normalize_score_array(20) ### @param(sphere_radius)
+    base_score_3dim = create_3dim_normalize_score_array(20) ### @param(sphere_radius)
 
-    #base_score_4dim = create_4dim_normalize_score_array(5)
+    base_score_4dim = create_4dim_normalize_score_array(5)
 
     print(scriptpath)
     ############# Start prepair data #############
@@ -199,11 +199,11 @@ if __name__ == "__main__":
     print(avg_joint_angle_std)
     print(avg_joint_angle_equl)
 
-    # ### calculate kinematics ###
-    # bye_kinematics_set = collect_kinematics_data(right_side_bye_set)
-    # salute_kinematics_set = collect_kinematics_data(right_side_salute_set)
-    # sinvite_kinematics_set = collect_kinematics_data(right_side_sinvite_set)
-    # wai_kinematics_set = collect_kinematics_data(right_side_wai_set)
+    ### calculate kinematics ###
+    bye_kinematics_set = collect_kinematics_data(right_side_bye_set)
+    salute_kinematics_set = collect_kinematics_data(right_side_salute_set)
+    sinvite_kinematics_set = collect_kinematics_data(right_side_sinvite_set)
+    wai_kinematics_set = collect_kinematics_data(right_side_wai_set)
 
     # # ##### bye posture #####
     # # ### collect bye catesian position and quaternion ###
@@ -217,13 +217,13 @@ if __name__ == "__main__":
     # bye_wrist_score_array, bye_wrist_index_offset = build_score_array_and_offset_3D(bye_wrist_position, 42, base_score_3dim)
     # bye_quaternion_score_array, bye_quatenion_index_offset = build_score_array_and_offset_4D(bye_quaternion_upScale, 42, base_score_4dim)
 
-    # bye_elbow_score_array_reduce = reduce_score_data(bye_elbow_score_array)
+    # bye_elbow_score_array_reduce = reduce_score_data(bye_elbow_score_array, bye_elbow_index_offset, 100)
     # np.save("bye_elbow_score_array_reduce",bye_elbow_score_array_reduce)
 
-    # bye_wrist_score_array_reduce = reduce_score_data(bye_wrist_score_array)
+    # bye_wrist_score_array_reduce = reduce_score_data(bye_wrist_score_array, bye_wrist_index_offset, 100)
     # np.save("bye_wrist_score_array_reduce",bye_wrist_score_array_reduce)
 
-    # bye_quaternion_score_array_reduce = reduce_score_data(bye_quaternion_score_array)
+    # bye_quaternion_score_array_reduce = reduce_score_data(bye_quaternion_score_array, bye_quatenion_index_offset, 100)
     # np.save("bye_quaternion_score_array_reduce",bye_quaternion_score_array_reduce)
 
 
@@ -237,59 +237,59 @@ if __name__ == "__main__":
 
     # salute_elbow_score_array, salute_elbow_index_offset = build_score_array_and_offset_3D(salute_elbow_position, 42, base_score_3dim)
     # salute_wrist_score_array, salute_wrist_index_offset = build_score_array_and_offset_3D(salute_wrist_position, 42, base_score_3dim)
-    # salute_quaternion_score_array, salute_quatenion_index_offset = build_score_array_and_offset_4D(salute_quaternion_upScale, 42, base_score_4dim)
+    # salute_quaternion_score_array, salute_quaternion_index_offset = build_score_array_and_offset_4D(salute_quaternion_upScale, 42, base_score_4dim)
 
-    # salute_elbow_score_array_reduce = reduce_score_data(salute_elbow_score_array)
+    # salute_elbow_score_array_reduce = reduce_score_data(salute_elbow_score_array, salute_elbow_index_offset, 100)
     # np.save("salute_elbow_score_array_reduce",salute_elbow_score_array_reduce)
 
-    # salute_wrist_score_array_reduce = reduce_score_data(salute_wrist_score_array)
+    # salute_wrist_score_array_reduce = reduce_score_data(salute_wrist_score_array, salute_wrist_index_offset, 100)
     # np.save("salute_wrist_score_array_reduce",salute_wrist_score_array_reduce)
 
-    # salute_quaternion_score_array_reduce = reduce_score_data(salute_quaternion_score_array)
+    # salute_quaternion_score_array_reduce = reduce_score_data(salute_quaternion_score_array, salute_quaternion_index_offset, 100)
     # np.save("salute_quaternion_score_array_reduce",salute_quaternion_score_array_reduce)
 
-    # # ##### sinvite posture #####
-    # # ### collect sinvite catesian position and quaternion ###
-    # sinvite_elbow_position = np.asarray(collect_cartesian_position_data(sinvite_kinematics_set, 3))  ### 3 = elbow position
-    # sinvite_wrist_position = np.asarray(collect_cartesian_position_data(sinvite_kinematics_set, 4))  ### 4 = wrist position
+    # ##### sinvite posture #####
+    # ### collect sinvite catesian position and quaternion ###
+    sinvite_elbow_position = np.asarray(collect_cartesian_position_data(sinvite_kinematics_set, 3))  ### 3 = elbow position
+    sinvite_wrist_position = np.asarray(collect_cartesian_position_data(sinvite_kinematics_set, 4))  ### 4 = wrist position
 
-    # sinvite_quaternion = np.asarray(collect_quaternion_data(sinvite_kinematics_set))
-    # sinvite_quaternion_upScale = np.copy(upScale_quaternion_value(sinvite_quaternion, 100)) 
+    sinvite_quaternion = np.asarray(collect_quaternion_data(sinvite_kinematics_set))
+    sinvite_quaternion_upScale = np.copy(upScale_quaternion_value(sinvite_quaternion, 100)) 
 
-    # sinvite_elbow_score_array, sinvite_elbow_index_offset = build_score_array_and_offset_3D(sinvite_elbow_position, 42, base_score_3dim)
-    # sinvite_wrist_score_array, sinvite_wrist_index_offset = build_score_array_and_offset_3D(sinvite_wrist_position, 42, base_score_3dim)
-    # sinvite_quaternion_score_array, sinvite_quatenion_index_offset = build_score_array_and_offset_4D(sinvite_quaternion_upScale, 42, base_score_4dim)
+    sinvite_elbow_score_array, sinvite_elbow_index_offset = build_score_array_and_offset_3D(sinvite_elbow_position, 42, base_score_3dim)
+    sinvite_wrist_score_array, sinvite_wrist_index_offset = build_score_array_and_offset_3D(sinvite_wrist_position, 42, base_score_3dim)
+    sinvite_quaternion_score_array, sinvite_quaternion_index_offset = build_score_array_and_offset_4D(sinvite_quaternion_upScale, 42, base_score_4dim)
 
-    # sinvite_elbow_score_array_reduce = reduce_score_data(sinvite_elbow_score_array)
-    # np.save("sinvite_elbow_score_array_reduce",sinvite_elbow_score_array_reduce)
+    sinvite_elbow_score_array_reduce = reduce_score_data(sinvite_elbow_score_array, sinvite_elbow_index_offset, 100)
+    np.save("sinvite_elbow_score_array_reduce",sinvite_elbow_score_array_reduce)
 
-    # sinvite_wrist_score_array_reduce = reduce_score_data(sinvite_wrist_score_array)
-    # np.save("sinvite_wrist_score_array_reduce",sinvite_wrist_score_array_reduce)
+    sinvite_wrist_score_array_reduce = reduce_score_data(sinvite_wrist_score_array, sinvite_wrist_index_offset, 100)
+    np.save("sinvite_wrist_score_array_reduce",sinvite_wrist_score_array_reduce)
 
-    # sinvite_quaternion_score_array_reduce = reduce_score_data(sinvite_quaternion_score_array)
-    # np.save("sinvite_quaternion_score_array_reduce",sinvite_quaternion_score_array_reduce)
+    sinvite_quaternion_score_array_reduce = reduce_score_data(sinvite_quaternion_score_array, sinvite_quaternion_index_offset, 100)
+    np.save("sinvite_quaternion_score_array_reduce",sinvite_quaternion_score_array_reduce)
 
-    # ##### wai posture #####
-    # ### collect wai catesian position and quaternion ###
-    # wai_elbow_position = np.asarray(collect_cartesian_position_data(wai_kinematics_set, 3))  ### 3 = elbow position
-    # wai_wrist_position = np.asarray(collect_cartesian_position_data(wai_kinematics_set, 4))  ### 4 = wrist position
+    ##### wai posture #####
+    ### collect wai catesian position and quaternion ###
+    wai_elbow_position = np.asarray(collect_cartesian_position_data(wai_kinematics_set, 3))  ### 3 = elbow position
+    wai_wrist_position = np.asarray(collect_cartesian_position_data(wai_kinematics_set, 4))  ### 4 = wrist position
 
-    # wai_quaternion = np.asarray(collect_quaternion_data(wai_kinematics_set))
-    # wai_quaternion_upScale = np.copy(upScale_quaternion_value(wai_quaternion, 100)) 
+    wai_quaternion = np.asarray(collect_quaternion_data(wai_kinematics_set))
+    wai_quaternion_upScale = np.copy(upScale_quaternion_value(wai_quaternion, 100)) 
 
-    # wai_elbow_score_array, wai_elbow_index_offset = build_score_array_and_offset_3D(wai_elbow_position, 42, base_score_3dim)
-    # wai_wrist_score_array, wai_wrist_index_offset = build_score_array_and_offset_3D(wai_wrist_position, 42, base_score_3dim)
-    # wai_quaternion_score_array, wai_quatenion_index_offset = build_score_array_and_offset_4D(wai_quaternion_upScale, 42, base_score_4dim)
+    wai_elbow_score_array, wai_elbow_index_offset = build_score_array_and_offset_3D(wai_elbow_position, 42, base_score_3dim)
+    wai_wrist_score_array, wai_wrist_index_offset = build_score_array_and_offset_3D(wai_wrist_position, 42, base_score_3dim)
+    wai_quaternion_score_array, wai_quaternion_index_offset = build_score_array_and_offset_4D(wai_quaternion_upScale, 42, base_score_4dim)
 
-    # wai_elbow_score_array_reduce = reduce_score_data(wai_elbow_score_array)
-    # print(type(wai_elbow_score_array_reduce))
-    # np.save("wai_elbow_score_array_reduce",wai_elbow_score_array_reduce)
+    wai_elbow_score_array_reduce = reduce_score_data(wai_elbow_score_array, wai_elbow_index_offset, 100)
+    print(type(wai_elbow_score_array_reduce))
+    np.save("wai_elbow_score_array_reduce",wai_elbow_score_array_reduce)
 
-    # wai_wrist_score_array_reduce = reduce_score_data(wai_wrist_score_array)
-    # np.save("wai_wrist_score_array_reduce",wai_wrist_score_array_reduce)
+    wai_wrist_score_array_reduce = reduce_score_data(wai_wrist_score_array, wai_wrist_index_offset, 100)
+    np.save("wai_wrist_score_array_reduce",wai_wrist_score_array_reduce)
 
-    # wai_quaternion_score_array_reduce = reduce_score_data(wai_quaternion_score_array)
-    # np.save("wai_quaternion_score_array_reduce",wai_quaternion_score_array_reduce)
+    wai_quaternion_score_array_reduce = reduce_score_data(wai_quaternion_score_array, wai_quaternion_index_offset, 100)
+    np.save("wai_quaternion_score_array_reduce",wai_quaternion_score_array_reduce)
 
     # wai_dataSet = np.concatenate((wai_elbow_position[0:100,:], wai_wrist_position[0:100,:], wai_quaternion[0:100, :-1]), axis=1)
     # wai_dataSet = np.insert(wai_dataSet, 10, 4, axis=1)

@@ -165,21 +165,36 @@ def objective_function(ref_reg, ref_y_max, T_matrix, Q, weight):
 def cal_Single_Posture_Score(ref_reg, ref_y_max, T_matrix, Q, score_weight):
 
 
-    elbow_position = [T_matrix[3][0, 3], T_matrix[3][1,3], T_matrix[3][2,3]]
-    wrist_position = [T_matrix[4][0, 3], T_matrix[4][1,3], T_matrix[4][2, 3]]
-    Q_position = [Q[0], Q[1], Q[2]]
+    elbow_position = [np.round(T_matrix[3][0, 3],0), np.round(T_matrix[3][1,3],0), np.round(T_matrix[3][2,3],0)]
+    wrist_position = [np.round(T_matrix[4][0, 3],0), np.round(T_matrix[4][1,3],0), np.round(T_matrix[4][2,3],0)]
+    Q_position = [np.round(Q[0]*100,0), np.round(Q[1]*100,0), np.round(Q[2]*100,0), np.round(Q[3]*100,0)]
 
+    try:
+        score_elbow = ref_reg[0][(elbow_position[0], elbow_position[1], elbow_position[2])]
+    except:
+        score_elbow = 0
 
-    score_elbow = ref_reg[0].predict(elbow_position)
-    score_wrist = ref_reg[1].predict(wrist_position)
-    score_Q = ref_reg[2].predict(Q_position)
+    try:
+        score_wrist = ref_reg[1][(wrist_position[0], wrist_position[1], wrist_position[2])]
+    except:
+        score_wrist = 0
 
-    #print("elbow_position", elbow_position, score_elbow, score_elbow/ref_y_max[0])
-    #print("wrist_position", wrist_position, score_wrist, score_wrist/ref_y_max[1])
-    #print("Q_position", Q_position, score_Q, score_Q/ref_y_max[2])
+    try:
+        score_Q = ref_reg[2][(Q_position[0], Q_position[1], Q_position[2], Q_position[3])]
+    except:
+        score_Q = 0
+
+    
+
+    
 
     sum_socre = (1 - (score_elbow*score_weight[0]/ref_y_max[0])) + (1 - (score_wrist*score_weight[1]/ref_y_max[1])) + (1 -(score_Q*score_weight[2]/ref_y_max[2]))
-    #print("sum score=", sum_socre)
+    if(sum_socre < 2):
+        print("elbow", elbow_position, score_elbow, score_elbow/ref_y_max[0])
+        print("wrist", wrist_position, score_wrist, score_wrist/ref_y_max[1])
+        print("Q", Q_position, score_Q, score_Q/ref_y_max[2])
+    
+        print("sum score=", sum_socre)
 
     score = []
     score.append(score_elbow)
@@ -274,7 +289,7 @@ def ChemotaxisAndSwim(ref_reg, ref_y_max, weight, search_space,
 
     return best, cells
 
-def loop(popsize):
+def loop(popsize, ref_score, ref_score_max):
 
     ### BFOA for 2017 ###
     #initial
@@ -289,7 +304,7 @@ def loop(popsize):
     problem_size = 7 #Dimension of the search space
 
     pop_size_S = popsize#50 #Total number of bacteria in the population
-    chem_steps_Nc = 100#100 #The number of chemo tactic steps
+    chem_steps_Nc = 500#100#100 #The number of chemo tactic steps
     swim_length_Ns = 4#4  #The swimming length
     repro_steps_Nre = 4#4 #Number of reproduction steps
     elim_disp_steps_Ned = 2 #Number of elimination-dispersal event
@@ -301,7 +316,7 @@ def loop(popsize):
     h_rep = d_attr #repulsion coefficient
     w_rep = 10 #repulsion coefficient
 
-    best_set = Search_New_Postures_by_BFOA(ref_regressor, all_y_max, joint_fixed, joint_fixed_value,posture_weight,
+    best_set = Search_New_Postures_by_BFOA(ref_score, ref_score_max, joint_fixed, joint_fixed_value,posture_weight,
             problem_size, search_space, pop_size_S,
             elim_disp_steps_Ned, repro_steps_Nre, chem_steps_Nc, swim_length_Ns, step_size_Ci, p_eliminate_Ped,
             d_attr, w_attr, h_rep, w_rep)
@@ -318,70 +333,99 @@ def loop(popsize):
 
 if __name__ == "__main__":
 
+    ### bye score ###
     bye_elbow_score_dict = np.load('bye_elbow_score_array_reduce.npy').item()
     bye_wrist_score_dict = np.load('bye_wrist_score_array_reduce.npy').item()
     bye_quaternion_score_dict = np.load('bye_quaternion_score_array_reduce.npy').item()
+    print(len(bye_elbow_score_dict), len(bye_wrist_score_dict), len(bye_quaternion_score_dict))
+    bye_score = [bye_elbow_score_dict, bye_wrist_score_dict, bye_quaternion_score_dict]
 
-    print(len(bye_elbow_score_dict))
-    print(len(bye_wrist_score_dict))
-    print(len(bye_quaternion_score_dict))
-    
+    bye_max_key = [max(bye_elbow_score_dict, key=lambda i: bye_elbow_score_dict[i]),
+                    max(bye_wrist_score_dict, key=lambda i: bye_wrist_score_dict[i]),
+                    max(bye_quaternion_score_dict, key=lambda i: bye_quaternion_score_dict[i])]   
+    bye_max_value = [bye_elbow_score_dict[(bye_max_key[0][0], bye_max_key[0][1], bye_max_key[0][2])],
+                        bye_wrist_score_dict[(bye_max_key[1][0], bye_max_key[1][1], bye_max_key[1][2])],
+                        bye_quaternion_score_dict[(bye_max_key[2][0], bye_max_key[2][1], bye_max_key[2][2], bye_max_key[2][3])]]    
+    print("bye_max_key", bye_max_key)
+    print("bye_max_value", bye_max_value)
+
+    ### salute score ###
+    salute_elbow_score_dict = np.load('salute_elbow_score_array_reduce.npy').item()
+    salute_wrist_score_dict = np.load('salute_wrist_score_array_reduce.npy').item()
+    salute_quaternion_score_dict = np.load('salute_quaternion_score_array_reduce.npy').item()
+    print(len(salute_elbow_score_dict), len(salute_wrist_score_dict), len(salute_quaternion_score_dict))
+    salute_score = [salute_elbow_score_dict, salute_wrist_score_dict, salute_quaternion_score_dict]
+
+    salute_max_key = [max(salute_elbow_score_dict, key=lambda i: salute_elbow_score_dict[i]),
+                    max(salute_wrist_score_dict, key=lambda i: salute_wrist_score_dict[i]),
+                    max(salute_quaternion_score_dict, key=lambda i: salute_quaternion_score_dict[i])]   
+    salute_max_value = [salute_elbow_score_dict[(salute_max_key[0][0], salute_max_key[0][1], salute_max_key[0][2])],
+                        salute_wrist_score_dict[(salute_max_key[1][0], salute_max_key[1][1], salute_max_key[1][2])],
+                        salute_quaternion_score_dict[(salute_max_key[2][0], salute_max_key[2][1], salute_max_key[2][2], salute_max_key[2][3])]]    
+    print("salute_max_key", salute_max_key)
+    print("salute_max_value", salute_max_value)
+
+    ref_score_max = [bye_max_value, salute_max_value]
+    ref_score = [bye_score, salute_score]
+
+    #print(len(ref_score))
+    #print("score = ",ref_score[0][0][(64, 202, 27)])
 
     avg_joint_angle_std = [68.1, -18.9, -6.9, 101.0, 1.5, 0.6, 23.5]
-    avg_joint_angle_equl = [66.6  -19.09  -5.67  88.22   3.65  -3.39  21.44]
+    avg_joint_angle_equl = [66.6,  -19.09,  -5.67,  88.22,   3.65,  -3.39,  21.44]
 
     posture_weight = [1, 1, 1]
     joint_fixed_value_set = [68.1, -18.9, -6.9, 101.0, 1.5, 0.6, 23.5]
     joint_fixed_value_set = np.round(joint_fixed_value_set,0)
-    print(joint_fixed_value_set)
+    print("joint_fixed_value_set = ",joint_fixed_value_set)
 
 
     joint_fixed = 3
     joint_fixed_value = joint_fixed_value_set[joint_fixed]
 
 
-    num_particle = 500
-    loop(num_particle)
-    print("fixed joint =", joint_fixed, "value =", joint_fixed_value)
-    print("num_particle =", num_particle)
-    #
-    # for i in range(5):
-    #     loop(10)
-    # for i in range(5):
-    #     loop(5)
-    #
+    num_particle = 1000
+    loop(num_particle, ref_score, ref_score_max)
+    # print("fixed joint =", joint_fixed, "value =", joint_fixed_value)
+    # print("num_particle =", num_particle)
+    # #
+    # # for i in range(5):
+    # #     loop(10)
+    # # for i in range(5):
+    # #     loop(5)
+    # #
 
     
 
     ########################################################
 
-#     bye_y_max_min = np.loadtxt("bye_ex_max_min")
-#     bye_y_max_min = np.round(bye_y_max_min,3)
-#     bye_y_max = bye_y_max_min[:,0]
-#     print(bye_y_max)
+    # bye_y_max_min = np.loadtxt("bye_ex_max_min")
+    # bye_y_max_min = np.round(bye_y_max_min,3)
+    # bye_y_max = bye_y_max_min[:,0]
+    # print(bye_y_max)
 
 
-#     salute_y_max_min = np.loadtxt("salute_ex_max_min")
-#     salute_y_max_min = np.round(salute_y_max_min, 3)
-#     salute_y_max = salute_y_max_min[:, 0]
-#     print(salute_y_max)
+    # salute_y_max_min = np.loadtxt("salute_ex_max_min")
+    # salute_y_max_min = np.round(salute_y_max_min, 3)
+    # salute_y_max = salute_y_max_min[:, 0]
+    # print(salute_y_max)
 
-#     sinvite_y_max_min = np.loadtxt("sinvite_ex_max_min")
-#     sinvite_y_max_min = np.round(sinvite_y_max_min, 3)
-#     sinvite_y_max = sinvite_y_max_min[:, 0]
-#     print(sinvite_y_max)
+    # sinvite_y_max_min = np.loadtxt("sinvite_ex_max_min")
+    # sinvite_y_max_min = np.round(sinvite_y_max_min, 3)
+    # sinvite_y_max = sinvite_y_max_min[:, 0]
+    # print(sinvite_y_max)
 
-#     wai_y_max_min = np.loadtxt("wai_ex_max_min")
-#     wai_y_max_min = np.round(wai_y_max_min, 3)
-#     wai_y_max = wai_y_max_min[:, 0]
-#     print(wai_y_max)
+    # wai_y_max_min = np.loadtxt("wai_ex_max_min")
+    # wai_y_max_min = np.round(wai_y_max_min, 3)
+    # wai_y_max = wai_y_max_min[:, 0]
+    # print(wai_y_max)
 
-#     all_y_max = [bye_y_max, salute_y_max, sinvite_y_max, wai_y_max]
+    # all_y_max = [bye_y_max, salute_y_max, sinvite_y_max, wai_y_max]
 
-#     # print(bye_y_max_min)
-#     # print(salute_y_max_min)
-#     # print(sinvite_y_max_min)
-#     # print(wai_y_max_min)
+    # print(bye_y_max_min)
+    # print(salute_y_max_min)
+    # print(sinvite_y_max_min)
+    # print(wai_y_max_min)
 
 #     ### load regressor ###
 #     bye_elbow_reg = pickle.load(open("bye_elbow_ex", 'rb'))
