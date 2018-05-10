@@ -110,7 +110,7 @@ def Search_New_Postures_by_BFOA(ref_regressor, all_y_max, joint_fixed, joint_fix
                 cells = sorted(cells, key=lambda Bacteria: Bacteria.sum_nutrients)
                 ## reproduction step ##
 
-                print("BBBBBBB",cells)
+                #print("BBBBBBB",cells)
                 print(len(cells)/2)
                 cells = cells[:int(len(cells)/2)]
                 cells = cells + cells
@@ -189,7 +189,7 @@ def cal_Single_Posture_Score(ref_reg, ref_y_max, T_matrix, Q, score_weight):
     
 
     sum_socre = (1 - (score_elbow*score_weight[0]/ref_y_max[0])) + (1 - (score_wrist*score_weight[1]/ref_y_max[1])) + (1 -(score_Q*score_weight[2]/ref_y_max[2]))
-    if(sum_socre < 2):
+    if(sum_socre < 1.5):
         print("elbow", elbow_position, score_elbow, score_elbow/ref_y_max[0])
         print("wrist", wrist_position, score_wrist, score_wrist/ref_y_max[1])
         print("Q", Q_position, score_Q, score_Q/ref_y_max[2])
@@ -365,8 +365,10 @@ if __name__ == "__main__":
     print("salute_max_key", salute_max_key)
     print("salute_max_value", salute_max_value)
 
-    ref_score_max = [bye_max_value, salute_max_value]
-    ref_score = [bye_score, salute_score]
+    ref_score_max = [salute_max_value]
+    ref_score = [salute_score]
+    #ref_score_max = [bye_max_value, salute_max_value]
+    #ref_score = [bye_score, salute_score]
 
     #print(len(ref_score))
     #print("score = ",ref_score[0][0][(64, 202, 27)])
@@ -384,7 +386,7 @@ if __name__ == "__main__":
     joint_fixed_value = joint_fixed_value_set[joint_fixed]
 
 
-    num_particle = 1000
+    num_particle = 200
     loop(num_particle, ref_score, ref_score_max)
     # print("fixed joint =", joint_fixed, "value =", joint_fixed_value)
     # print("num_particle =", num_particle)
