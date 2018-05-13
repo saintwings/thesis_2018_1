@@ -46,12 +46,13 @@ def check_score_posture(posture_type, posture_value,score_weight):
     except:
         score_Q = 0
 
-    sum_socre = (1 - (score_elbow*score_weight[0]/max_value[0])) + (1 - (score_wrist*score_weight[1]/max_value[1])) + (1 -(score_Q*score_weight[2]/max_value[2]))
+    sum_socre = (score_weight[0] - (score_elbow*score_weight[0]/max_value[0])) + (score_weight[1] - (score_wrist*score_weight[1]/max_value[1])) + (score_weight[2] -(score_Q*score_weight[2]/max_value[2]))
+
     
     print("posture >>>>>>>", str(posture_type))
-    print("elbow", elbow_position, score_elbow, score_elbow/max_value[0])
-    print("wrist", wrist_position, score_wrist, score_wrist/max_value[1])
-    print("Q", Q_position, score_Q, score_Q/max_value[2])
+    print("elbow", elbow_position, score_elbow, score_elbow/max_value[0]*score_weight[0])
+    print("wrist", wrist_position, score_wrist, score_wrist/max_value[1]*score_weight[1])
+    print("Q", Q_position, score_Q, score_Q/max_value[2]*score_weight[2])
 
     print("sum score=", sum_socre)
 
@@ -120,15 +121,19 @@ if __name__ == "__main__":
 
     # check_score_posture("wai",[88,-19,-7,130,32,1,-25],posture_weight)
 
-    ############### joint 6 = 24 #############
+    # ############### joint 6 = 24 #############
 
-    check_score_posture("bye",[54,-9,15,95,-52,-20,24],posture_weight)
+    # check_score_posture("bye",[54,-9,15,95,-52,-20,24],posture_weight)
 
-    check_score_posture("salute",[114,-37,-38,107,-67,1,24],posture_weight)
+    # check_score_posture("salute",[114,-37,-38,107,-67,1,24],posture_weight)
 
-    check_score_posture("sinvite",[36,-29,0,74,40,-32,24],posture_weight)
+    # check_score_posture("sinvite",[36,-29,0,74,40,-32,24],posture_weight)
 
-    check_score_posture("wai",[88,-14,-45,89,20,-15,24],posture_weight)
+    # check_score_posture("wai",[88,-14,-45,89,20,-15,24],posture_weight)
+
+
+    posture_weight = [0.5, 2, 1]
+    check_score_posture("wai",[72,-19,29,107,45,45,-11],posture_weight)
 
     
     

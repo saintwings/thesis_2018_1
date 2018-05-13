@@ -65,7 +65,7 @@ def convert_cartersianSpace_to_motorValue(single_data):
 if __name__ == "__main__":
     #data = [54,-40,39,101,18,-6,-43]
     #convert_cartersianSpace_to_motorValue(data)
-    data = [70,-19,10,101,-46,-3,-14]
+    data = [113,-44,-20,101,62,45,-2]
     convert_cartersianSpace_to_motorValue(data)
     # data = [114,-37,-38,107,-67,1,24]
     # convert_cartersianSpace_to_motorValue(data)
