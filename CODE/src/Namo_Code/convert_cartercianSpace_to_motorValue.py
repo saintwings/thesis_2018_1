@@ -58,11 +58,25 @@ def convert_cartersianSpace_to_motorValue(single_data):
     for i in range(len(single_data)):
         motor_value.append(  round(((single_data[i]*4095/359)/motor_direction[i]) + motor_center[i],0)   )
     
+    print("data = ", single_data)
     print("motor value = ",motor_value)
 
 
 if __name__ == "__main__":
     #data = [54,-40,39,101,18,-6,-43]
     #convert_cartersianSpace_to_motorValue(data)
-    data = [18,-34,39,101,35,-16,-8]
+    data = [70,-19,10,101,-46,-3,-14]
     convert_cartersianSpace_to_motorValue(data)
+    # data = [114,-37,-38,107,-67,1,24]
+    # convert_cartersianSpace_to_motorValue(data)
+    # data = [55,-40,45,43,-82,4,24]
+    # convert_cartersianSpace_to_motorValue(data)
+    # data = [56,-20,-33,115,6,-9,24]
+    # convert_cartersianSpace_to_motorValue(data)
+
+    # data = [36,-29,0,74,40,-32,24]
+    # convert_cartersianSpace_to_motorValue(data)
+    # data = [88,-14,-45,89,20,-15,24]
+    # convert_cartersianSpace_to_motorValue(data)
+
+    
