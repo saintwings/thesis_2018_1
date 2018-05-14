@@ -185,6 +185,13 @@ if __name__ == "__main__":
     right_side_sinvite_set = extract_arm_data(jointAngle_degree_sinvite_set, 'right')
     right_side_wai_set = extract_arm_data(jointAngle_degree_wai_set, 'right')
 
+    np.save("right_side_bye_set",right_side_bye_set)
+    np.save("right_side_salute_set",right_side_salute_set)
+    np.save("right_side_sinvite_set",right_side_sinvite_set)
+    np.save("right_side_wai_set",right_side_wai_set)
+
+    sys.exit()
+
     ### calculate each posture stat ###
     right_side_bye_stat = calculate_stat_all_joint(right_side_bye_set)
     right_side_salute_stat = calculate_stat_all_joint(right_side_salute_set)

@@ -31,21 +31,29 @@ def check_score_posture(posture_type, posture_value,score_weight):
     wrist_position = [np.round(T_matrix[4][0, 3],0), np.round(T_matrix[4][1,3],0), np.round(T_matrix[4][2,3],0)]
     Q_position = [np.round(Q[0]*100,0), np.round(Q[1]*100,0), np.round(Q[2]*100,0), np.round(Q[3]*100,0)]
 
-    try:
-        score_elbow = elbow_score_dict[(elbow_position[0], elbow_position[1], elbow_position[2])]
-    except:
-        score_elbow = 0
+    score_elbow = 0
+    score_wrist = 0
+    score_Q = 0
 
-    try:
-        score_wrist = wrist_score_dict[(wrist_position[0], wrist_position[1], wrist_position[2])]
-    except:
-        score_wrist = 0
+    if(score_weight[0] != 0):
+        try:
+            score_elbow = elbow_score_dict[(elbow_position[0], elbow_position[1], elbow_position[2])]
+        except:
+            score_elbow = 0
 
-    try:
-        score_Q = q_score_dict[(Q_position[0], Q_position[1], Q_position[2], Q_position[3])]
-    except:
-        score_Q = 0
+    if(score_weight[1] != 0):
+        try:
+            score_wrist = wrist_score_dict[(wrist_position[0], wrist_position[1], wrist_position[2])]
+        except:
+            score_wrist = 0
 
+    if(score_weight[2] != 0):
+        try:
+            score_Q = q_score_dict[(Q_position[0], Q_position[1], Q_position[2], Q_position[3])]
+        except:
+            score_Q = 0
+
+    score = (score_elbow*score_weight[0]/max_value[0]) + (score_wrist*score_weight[1]/max_value[1]) + (score_Q*score_weight[2]/max_value[2])
     sum_socre = (score_weight[0] - (score_elbow*score_weight[0]/max_value[0])) + (score_weight[1] - (score_wrist*score_weight[1]/max_value[1])) + (score_weight[2] -(score_Q*score_weight[2]/max_value[2]))
 
     
@@ -53,12 +61,12 @@ def check_score_posture(posture_type, posture_value,score_weight):
     print("elbow", elbow_position, score_elbow, score_elbow/max_value[0]*score_weight[0])
     print("wrist", wrist_position, score_wrist, score_wrist/max_value[1]*score_weight[1])
     print("Q", Q_position, score_Q, score_Q/max_value[2]*score_weight[2])
-
-    print("sum score=", sum_socre)
+    print("sum score max =", sum(score_weight))
+    print("sum score=",score, sum_socre)
 
 
 if __name__ == "__main__":
-
+    print("check score>>>>>>>>>>>>")
     posture_weight = [1, 1, 1]
 
     # ############### joint 0 = 68 #############
