@@ -239,10 +239,11 @@ def cal_Single_Posture_Score(ref_reg, ref_y_max, T_matrix, Q, score_weight):
             score_Q = ref_reg[2][(Q_position[0], Q_position[1], Q_position[2], Q_position[3])]
         except:
             score_Q = 0
-
-    sum_socre = (score_weight[0] - (score_elbow*score_weight[0]/max_value[0])) + (score_weight[1] - (score_wrist*score_weight[1]/max_value[1])) + (score_weight[2] -(score_Q*score_weight[2]/max_value[2]))
-
-    
+    try:
+        sum_socre = (score_weight[0] - (score_elbow*score_weight[0]/ref_y_max[0])) + (score_weight[1] - (score_wrist*score_weight[1]/ref_y_max[1])) + (score_weight[2] -(score_Q*score_weight[2]/ref_y_max[2]))
+    except:
+        sum_socre = (score_weight[0] - (score_elbow*score_weight[0]/ref_y_max[0])) + (score_weight[1] - (score_wrist*score_weight[1]/ref_y_max[1]))
+  
     # if(sum_socre < (sum(score_weight)/2)):
     #     print("elbow", elbow_position, score_elbow, score_elbow/ref_y_max[0])
     #     print("wrist", wrist_position, score_wrist, score_wrist/ref_y_max[1])
@@ -388,28 +389,40 @@ def loop(popsize, chem_steps_Nc, ref_score, ref_score_max, posture):
 
     return best_vector
 
-
-
-if __name__ == "__main__":
-
-    posture = "wai" #############
+def build_new_posture(postureName, postureType):
+    posture = postureName #############
     posture_weight = [1, 1, 1] ####################
     joint_fixed = 2 ###############
-    num_particle = [0,30] ############# [random , trained]
+    num_particle = [0,50] ############# [random , trained]
     chem_steps_Nc = 100 ###################
 
-    elbow_score_dict = np.load(str(posture) + '_elbow_score_array_reduce.npy').item()
-    wrist_score_dict = np.load(str(posture) + '_wrist_score_array_reduce.npy').item()
-    quaternion_score_dict = np.load(str(posture) + '_quaternion_score_array_reduce.npy').item()
-    print(len(elbow_score_dict), len(wrist_score_dict), len(quaternion_score_dict))
-    score = [elbow_score_dict, wrist_score_dict, quaternion_score_dict]
+    if(postureType == 'main'):
+        elbow_score_dict = np.load(str(posture) + '_elbow_score_array_reduce.npy').item()
+        wrist_score_dict = np.load(str(posture) + '_wrist_score_array_reduce.npy').item()
+        quaternion_score_dict = np.load(str(posture) + '_quaternion_score_array_reduce.npy').item()
+        print(len(elbow_score_dict), len(wrist_score_dict), len(quaternion_score_dict))
+        score = [elbow_score_dict, wrist_score_dict, quaternion_score_dict]
 
-    max_key = [max(elbow_score_dict, key=lambda i: elbow_score_dict[i]),
-                    max(wrist_score_dict, key=lambda i: wrist_score_dict[i]),
-                    max(quaternion_score_dict, key=lambda i: quaternion_score_dict[i])]   
-    max_value = [elbow_score_dict[(max_key[0][0], max_key[0][1], max_key[0][2])],
-                        wrist_score_dict[(max_key[1][0], max_key[1][1], max_key[1][2])],
-                        quaternion_score_dict[(max_key[2][0], max_key[2][1], max_key[2][2], max_key[2][3])]]    
+        max_key = [max(elbow_score_dict, key=lambda i: elbow_score_dict[i]),
+                        max(wrist_score_dict, key=lambda i: wrist_score_dict[i]),
+                        max(quaternion_score_dict, key=lambda i: quaternion_score_dict[i])]   
+        max_value = [elbow_score_dict[(max_key[0][0], max_key[0][1], max_key[0][2])],
+                            wrist_score_dict[(max_key[1][0], max_key[1][1], max_key[1][2])],
+                            quaternion_score_dict[(max_key[2][0], max_key[2][1], max_key[2][2], max_key[2][3])]] 
+    else:
+        #elbow_score_dict = np.load(str(posture) + '_elbow_score_array_reduce.npy').item()
+        #wrist_score_dict = np.load(str(posture) + '_wrist_score_array_reduce.npy').item()
+        elbow_score_dict = np.load(str(postureName) + '_' + str(postureType) +'_elbow_score_array.npy').item()
+        wrist_score_dict = np.load(str(postureName) + '_' + str(postureType) +'_wrist_score_array.npy').item()
+
+        print(len(elbow_score_dict), len(wrist_score_dict))
+        score = [elbow_score_dict, wrist_score_dict]
+
+        max_key = [max(elbow_score_dict, key=lambda i: elbow_score_dict[i]),
+                        max(wrist_score_dict, key=lambda i: wrist_score_dict[i])]   
+        max_value = [elbow_score_dict[(max_key[0][0], max_key[0][1], max_key[0][2])],
+                            wrist_score_dict[(max_key[1][0], max_key[1][1], max_key[1][2])]] 
+
     print(str(posture) + "_max_key", max_key)
     print(str(posture) + "_max_value", max_value)
 
@@ -430,6 +443,22 @@ if __name__ == "__main__":
         check_score_posture(posture,best_vector[i],posture_weight)
         convert_cartersianSpace_to_motorValue(best_vector[i])
 
+
+
+if __name__ == "__main__":
+    joint_fixed = 3 ###############
+    posture_weight = [1, 1, 0] ####################
+    avg_joint_angle_std = [68.1, -18.9, -6.9, 101.0, 1.5, 0.6, 23.5]
+    avg_joint_angle_equl = [66.6,  -19.09,  -5.67,  88.22,   3.65,  -3.39,  21.44]
+
+    joint_fixed_value_set = [68.1, -18.9, -6.9, 101.0, 1.5, 0.6, 23.5]
+    joint_fixed_value_set = np.round(joint_fixed_value_set,0)
+    print("joint_fixed_value_set = ",joint_fixed_value_set)
+
+    joint_fixed_value = joint_fixed_value_set[joint_fixed]
+
+    build_new_posture('sinvite', 'pre')
+    
 
 
 
