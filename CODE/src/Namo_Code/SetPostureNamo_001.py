@@ -8,6 +8,8 @@ import serial
 import sys
 import serial.tools.list_ports
 from configobj import ConfigObj
+import os.path
+scriptpath = os.path.dirname(__file__)
 
 
 class NamoMainWindow(QtWidgets.QMainWindow,Ui_Form):
@@ -40,7 +42,10 @@ class NamoMainWindow(QtWidgets.QMainWindow,Ui_Form):
 
 
         ## load center ##
-        file_center = open('./Postures/motor_center.txt', 'r')
+        fileName_load = os.path.join(scriptpath,'Postures\motor_center.txt')
+        print(fileName_load)
+        file_center = open(fileName_load, 'r')
+
         self.int_motorCenterValue = file_center.read()
         file_center.close()
         self.int_motorCenterValue = self.int_motorCenterValue.split('\n')
@@ -48,7 +53,8 @@ class NamoMainWindow(QtWidgets.QMainWindow,Ui_Form):
             self.int_motorCenterValue[x] = int(self.int_motorCenterValue[x])
 
         ## load motor type ##
-        file_type = open('./Postures/motor_type.txt', 'r')
+        fileName_load = os.path.join(scriptpath,'Postures\motor_type.txt')
+        file_type = open(fileName_load, 'r')
         self.str_motorType = file_type.read()
         file_type.close()
         self.str_motorType = self.str_motorType.split('\n')
@@ -466,8 +472,15 @@ class NamoMainWindow(QtWidgets.QMainWindow,Ui_Form):
 
         self.ui.fileName_label.setText(self.str_fileName + self.str_fileNameNumber + "[std pos]")
 
-        filename = './Postures/' + str(self.str_fileName) + str(self.str_fileNameNumber)+ '.ini'
+    #     fileName_load = os.path.join(scriptpath,'Postures\motor_center.txt')
+    # #file_center = open("./Postures/motor_center.txt", 'r')
+    # file_center = open(fileName_load, 'r')
 
+
+        #filename = '\Postures\\' + str(self.str_fileName) + str(self.str_fileNameNumber)+ '.ini'
+        print(scriptpath)
+        filename = os.path.join(scriptpath,'Postures\\' + str(self.str_fileName) + str(self.str_fileNameNumber)+ '.ini')
+        print(filename)
         config = ConfigObj(filename)
         self.int_numberOfKeyframe = int(config['Keyframe_Amount'])
         self.ui.numOfKeyframeStatus_label.setText(str(self.int_numberOfKeyframe))
